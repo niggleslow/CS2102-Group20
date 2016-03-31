@@ -1,0 +1,43 @@
+//User - i feel that there should be a name for the project to indicate the entrepreneurs
+SELECT * FROM project p;
+SELECT p.title, p.description FROM project p;
+SELECT p.title, p.startdate FROM project p;
+SELECT p.title, p.duration FROM project p;
+SELECT p.title, p.funding FROM project p;
+SELECT p.title, p.description, p.startdate FROM project p;
+SELECT p.title, p.description, p.duration FROM project p;
+SELECT p.title, p.description, p.funding FROM project p;
+SELECT p.title, p.startdate, p.duration FROM project p;
+SELECT p.title, p.startdate, p.funding FROM project p;
+SELECT p.title, p.duration, p.funding FROM project p;
+SELECT p.title, p.description, p.startdate, p.duration FROM project p;
+SELECT p.title, p.description, p.startdate, p.funding FROM project p;
+SELECT p.title, p.description, p.duration, p.funding FROM project p;
+SELECT p.title, p.startdate, p.duration, p.funding FROM project p;
+
+//entrepreneurs - they can create a project and i feel that there should be a funding required and funding received
+// - Another thing is that they should be able to modify their own project only
+INSERT INTO project p (p.title, p.description, p.startdate, p.duration, 0);
+INSERT INTO project p (p.title, p.description, p.startdate, p.duration, p.funding);
+UPDATE project p SET p.title = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.description = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.startdate = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.duration = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.funding = ' ' WHERE name = 'entrepreneur';
+
+//Administrators - can alter anything
+DROP TABLE project p;
+CREATE TABLE project p;
+CREATE TABLE;
+DROP TABLE;
+UPDATE project p SET p.title = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.description = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.startdate = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.duration = ' ' WHERE name = 'entrepreneur';
+UPDATE project p SET p.funding = ' ' WHERE name = 'entrepreneur';
+DELETE FROM project p WHERE p.title = ' ';
+DELETE FROM project p WHERE p.description = ' ';
+DELETE FROM project p WHERE p.startdate = ' ';
+DELETE FROM project p WHERE p.duration = ' ';
+DELETE FROM project p WHERE p.funding = ' ';
+ALTER project p ALTER COLUMN ...;
