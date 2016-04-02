@@ -1,0 +1,52 @@
+.pledge-bar {
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+h1 {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family: 'Raleway', sans-serif;
+}
+
+td {
+    padding: 1em;
+}
+
+tbody tr:hover {
+    background: white;
+}
+
+table.tablesorter thead tr .header {
+	background-image: url(../assets/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(../assets/asc.gif);
+}
+
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(../assets/desc.gif);
+}
+
+.description {
+    padding-bottom: 10px;
+}
+
+.bg-green {
+    background-color: #2bde73;
+}
+
+.bg-grey {
+    background-color: #ccc;
+}
+
+.bg-grey-light {
+    background-color: #f5f5f5;
+}
