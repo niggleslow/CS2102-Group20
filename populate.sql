@@ -54,17 +54,17 @@ INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Cathy', 'E
 
 INSERT INTO projects(title, description, amount, start_date, duration, category, remaining_amount, e_name) VALUES ('Create-a-cup', 'Tired of drinking from a plain old cup? With Create-a-cup you will be able to design and create your very own cup!', 200000, '5-6-2016', 25, 'custom', 200000, 'Chaplin');
 
-INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Chaplin', 'Create-a-cup')
+INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Chaplin', 'Create-a-cup');
 
 
 INSERT INTO projects(title, description, amount, start_date, duration, category, remaining_amount, e_name) VALUES ('Sounds Good', 'With patented audio technology, Sounds Good is able to provide top quality audio equipment to audio enthusiasts all over the world!', 500000, '7-4-2016', 90, 'audio', 500000, 'Caitlyn');
 
-INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Caitlyn', 'Sounds Good')
+INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Caitlyn', 'Sounds Good');
 
 
 INSERT INTO projects(title, description, amount, start_date, duration, category, remaining_amount, e_name) VALUES ('Food Cheetah', 'A food delivery service that will be able to provide lightning fast delivery times from 100s of partnered food outlets!', 400000, '2-4-2016', 45, 'food', 400000, 'Calvin');
 
-INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Calvin', 'Food Cheetah')
+INSERT INTO create_project(entrepreneur_name, project_title) VALUES ('Calvin', 'Food Cheetah');
 
 
 
