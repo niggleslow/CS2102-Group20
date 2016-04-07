@@ -19,6 +19,8 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 $username = $_POST["username"];
 $password = $_POST["password"];
 
+$_SESSION["username"]= $username;
+
 
 // select a row from the database for login and check that array is not empty
 $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";

@@ -20,6 +20,9 @@ $username = $_POST["username"];
 $password = $_POST["password"];
 
 
+$_SESSION["username"]= $username;
+
+
 // select a row from the database for login and check that array is not empty
 $query = "SELECT * FROM administrators WHERE username = '$username' AND password = '$password'";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
