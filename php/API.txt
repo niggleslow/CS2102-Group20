@@ -1,0 +1,59 @@
+How to use:
+
+Use jquery function $.post to post to php endpoints:
+
+Endpoint = /php/$TYPE_OF_OBJECT/$FUNCTIONS
+
+List of endpoints:
+
+/php/administrators/create.php => Create a administrator row => No output expected
+
+$.post( "/php/administrators/create.php", { username: "John", password: "password123" })
+  .done(function( data ) {
+    // ignores data
+  });
+
+List of endpoints:
+
+/php/administrators/login.php => Tries to login to  => JSON format of true or false depending if username and password exists
+
+$.post( "/php/administrators/login.php", { username: "John", password: "password123" })
+  .done(function( data ) {
+    // check if true and proceed to other screen else rejects login
+  });
+
+
+/php/entrepreneurs/create.php => As above but for entrepreneurs
+/php/entrepreneurs/login.php => As above but for entrepreneurs
+
+/php/entrepreneurs/insert_project.php => Inserts a project with arguments as required => No output expected
+
+NOTE: Entrepreneur's username not required as we assume entrepreneur is logged in in order to perform this action
+
+
+$.post( "/php/entrepreneurs/insert_project.php", { title: "title", description: "description", startdate: "startdate", startdate: "startdate", duration: "duration", categories: "categories", funding: "funding"})
+  .done(function( data ) {
+  // ignores data
+  });
+
+
+/php/projects/delete.php => Delete a project row => No output expected
+
+$.post( "/php/projects/delete.php", { title: "My project title"})
+  .done(function( data ) {
+  // ignores data
+  });
+
+
+/php/users/create.php => As above but for users
+/php/users/login.php => As above but for users
+
+
+/php/users/funding.php => Funds a project with arguments as required => No output expected
+
+NOTE: User's username not required as we assume user is logged in in order to perform this action
+
+$.post( "/php/users/funding.php", { project_title: "project_title", amount_pledged: "amount_pledged"})
+  .done(function( data ) {
+  // ignores data
+  });
