@@ -5,6 +5,41 @@
     margin-bottom: 10px;
 }
 
+.openlogin-popup, .openModify-popup, .openCreate-popup{
+    background-color:#FFFFFF;
+    border:1px solid #999999;
+    cursor:default;
+    display:none;
+    margin-top: 15px;
+    position:absolute;
+    text-align:left;
+    width:394px;
+    z-index:50;
+    padding: 25px 25px 20px;
+}
+
+textarea {
+    font-family: sans-serif;
+}
+
+select:invalid {
+    color: gray;
+}
+
+option {
+    color: black;
+}
+
+.input-intable {
+    display: table;
+    width: 100%;
+}
+
+.input-intable .cell {
+    display: table-cell;
+    margin: auto;
+}
+
 h1 {
     display:flex;
     justify-content:center;
@@ -12,7 +47,7 @@ h1 {
     font-family: 'Raleway', sans-serif;
 }
 
-td {
+td .row {
     padding: 1em;
 }
 
