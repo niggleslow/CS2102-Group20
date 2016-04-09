@@ -19,24 +19,9 @@
             <div class="column">
                 <input type="text" id="search" placeholder="Search by Title" style="margin-top: 10px">
             </div>
-            <div class="column">
-                <div id="create-form" style="margin-top: 10px; margin-left: 20px">
-                    <button class="openCreate_open" href="#openCreate">Create Project</button>
-                </div>
+            <div class="column" id="theCreate">
             </div>
-            <div class="column">
-                <div id="login-form" style="text-align:right; margin-top: 10px; margin-right: 20px">
-                    <!--<?php 
-                        session_start();
-                        if($_SESSION['logged']==true){ 
-                            echo $_SESSION["username"];
-                            echo '<a href="logout.php"><span>Logout</span></a>';
-                        }
-                        elseif($_SESSION['logged']==false)
-                            echo '<button id="login" class="openlogin_open" href="#openlogin">Log in</button>';
-                    ?>-->
-                    <button class="openlogin_open" href="#openlogin">Log in</button>
-                </div>
+            <div class="column" id="theLogin">
             </div>
         </div>
         <table class="table2 tablesorter">
@@ -45,8 +30,9 @@
                     <th class="name">Project</th>
                     <th>Funded</th>
                     <th>Goal</th>
-                    <th>Backers</th>
+                    <th>Start Date</th>
                     <th>Days to go</th>
+                    <th>Category</th>
                 </tr>
             </thead>
             <tbody id="project-table">
@@ -54,15 +40,11 @@
                     <td id="title">
                         <div class="row">
                             <div class="column">
-                                <h3><a href="#">Hyper Light Drifter</a></h3>
+                                <h3><a id="titleName" href="#">Hyper Light Drifter</a></h3>
                                 <h5>by <a href="#">Heart Machine</a></h5>
                             </div>
-                            <div class="column" style="text-align: right">
-                                <button class="openModify_open" href="#openModify">Modify</button>
-                                <form id="fund">
-                                    <input type="number" name="fund" id="fund" placeholder="0" style="width: 20%">
-                                    <input type="submit" value="fund">
-                                </form>
+                            <div class="column" id="theProject" style="text-align: right">
+                                <button onclick='deleteRow(this)'>Delete</button>
                             </div>
                         </div>
                         <div class="row">
@@ -139,8 +121,8 @@
             <form id="modify" action="" method="get">
                 <div>
                     <h3>Editing Project</h3>
-                    <label for="title">Title: </label>
-                    <input type="text" name="title" id="title" placeholder="Name of the project">
+                    <label for="newTitle">Title: </label>
+                    <input type="text" name="newTitle" id="newTitle" placeholder="Name of the project">
                     <label for="desc">Description: </label>
                     <textarea name="desc" id="desc" placeholder="Short description of the project"></textarea>
                     <div class="input-intable">
@@ -151,7 +133,7 @@
                             <input type="number" name="funded" id="funded" placeholder="0"></div>
                         </div>
                         <div class="row">
-                            <div class="cell"><label for="dur">Backers: </label>
+                            <div class="cell"><label for="backers">Backers: </label>
                             <input type="number" name="backers" id="backers" placeholder="0"></div>
                             <div class="cell"><label for="dur">Duration (Days): </label>
                             <input type="number" name="dur" id="dur" placeholder="0"></div>
@@ -161,18 +143,28 @@
                 </div>
             </form>
         </div>
-        <div id="openCreate" class="openCreate-popup">
+        <div id="openCreate" class="openCreate-popup" style="width: 500px">
             <form id="create" action="" method="get">
                 <div>
                     <h3>New Project</h3>
-                    <label for="title">Title: </label>
-                    <input type="text" name="title" id="title" placeholder="Name of the project">
+                    <label for="newTitle">Title: </label>
+                    <input type="text" name="newTitle" id="newTitle" placeholder="Name of the project">
                     <label for="desc">Description: </label>
                     <textarea name="desc" id="desc" placeholder="Short description of the project"></textarea>
-                    <label for="goal">Goal ($): </label>
-                    <input type="number" name="goal" id="goal" placeholder="0" style="width: 30%">
-                    <label for="dur">Duration (Days): </label>
-                    <input type="number" name="dur" id="dur" placeholder="0" style="width: 30%">
+                    <div class="input-intable">
+                        <div class="row">
+                            <div class="cell"><label for="startDate">Start Date: </label>
+                            <input type="date" name="startDate" id="startDate"></div>
+                            <div class="cell"><label for="dur">Duration (Days): </label>
+                            <input type="number" name="dur" id="dur" value="0" placeholder="0"></div>
+                        </div>
+                        <div class="row">
+                            <div class="cell"><label for="category">Category: </label>
+                            <input type="text" name="category" id="category" value="None" placeholder="Type of project"></div>
+                            <div class="cell"><label for="goal">Goal ($): </label>
+                            <input type="number" name="goal" id="goal" value="0" placeholder="0"></div> 
+                        </div>
+                    </div>
                     <ul style="text-align: right"><input type="submit"></ul>
                 </div>
             </form>
@@ -180,10 +172,10 @@
         <div id="openlogin" class="openlogin-popup">
             <form id="login" action="" method="post">
                 <div>
-                    <h3>Log in</h3>
-                    <input type="text" name="username" id="usrnm" placeholder="Username">
-                    <input type="password" name="password" id="pswd" placeholder="Password">
-                    <select name="domain" required>
+                    <h3 id="loginSheet">Log in</h3>
+                    <input type="text" name="username" id="username" placeholder="Username">
+                    <input type="password" name="password" id="password" placeholder="Password">
+                    <select id="domain" name="domain" required>
                         <option value="" disabled selected hidden>Domain</option>
                         <option value="user">User</option>
                         <option value="entre">Entrepreneur</option>
@@ -192,6 +184,12 @@
                     <input type="submit">
                 </div>
             </form>
+        </div>
+        <div id="loginSuccess" class="loginSuccess-popup">
+            <button>Welcome <a href="#" class="displayUSer"></a></button>
+        </div>
+        <div id="loginFailed" class="loginFailed-popup">
+            <h3>Sorry, username or password doesn't exist.</h3>
         </div>
         <!-------------------------------------- End of button pop ups ------------------------------------->
     </body>
