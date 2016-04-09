@@ -10,22 +10,27 @@ $(document).ready(function () {
 $(document).ready(function(){
     $("#login").submit(function(){
         var domainName = "";
-        if($_POST["domain"] == "user"){
+        if($("#domain").val() == "user"){
             domainName = "/php/users/login.php";
         }
-        else if($_POST["domain"] == "entre"){
+        else if($("#domain").val() == "entre"){
             domainName = "/php/entrepreneurs/login.php";
         }
-        else if($_POST["domain"] == "admin"){
+        else if($("#domain").val() == "admin"){
             domainName = "/php/administrators/login.php";
         }
         $.post(domainName, 
         {
-          username: $_POST["username"],
-          password: $_POST["password"]
-        },
-        function(data, status){
-            alert("Data: " + data + "\nStatus: " + status);
+          username: $("#username").val(),
+          password: $("#password").val()
+        })
+        .done(function( data ) {
+            var obj = JSON.parse(data);
+            if(obj.status == "true"){
+                alert("login success");
+            } else if(obj.status == "false"){
+                alert("login failed");
+            }
         });
     });
 });
