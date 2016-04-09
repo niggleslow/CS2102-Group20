@@ -19,10 +19,6 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 $username = $_POST["username"];
 $password = $_POST["password"];
 
-$_SESSION["username"]= $username;
-$_SESSION["logged_in"]= "true";
-$_SESSION["type"]= "entrepreneurs";
-
 // select a row from the database for login and check that array is not empty
 $query = "SELECT * FROM entrepreneurs WHERE username = '$username' AND password = '$password'";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
@@ -33,6 +29,13 @@ $answer = array();
 
 if (!empty($result)){
 	$answer["status"] = "true";
+	
+	
+	$_SESSION["username"]= $username;
+	$_SESSION["logged_in"]= "true";
+	$_SESSION["type"]= "entrepreneurs";
+	
+	
 } else {
 	$answer["status"] = "false";
 	

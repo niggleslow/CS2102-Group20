@@ -19,9 +19,6 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 $username = $_POST["username"];
 $password = $_POST["password"];
 
-$_SESSION["username"]= $username;
-$_SESSION["logged_in"]= "true";
-$_SESSION["type"]= "users";
 
 // select a row from the database for login and check that array is not empty
 $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
@@ -32,6 +29,12 @@ $result = pg_fetch_all($result);
 $answer = array();
 
 if (!empty($result)){
+	
+	
+	$_SESSION["username"]= $username;
+	$_SESSION["logged_in"]= "true";
+	$_SESSION["type"]= "users";
+	
 	$answer["status"] = "true";
 } else {
 	$answer["status"] = "false";
