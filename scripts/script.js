@@ -2,7 +2,6 @@
   -Known issues:
   - The table sorter is using a string sort instead of a numeric sort as you would expect.
   */
-var rowIndex = 0;
 
 function fillTable(type){
     $.get("/php/all_projects.php")
@@ -12,7 +11,6 @@ function fillTable(type){
                     //type, title, user, desc, goal, start, dur, cat
             addRow(type, value.title, value.e_name, value.description, value.remaining_amount,
                     value.amount, value.start_date, value.duration, value.category);
-            rowIndex++;
         });
     });
 }
@@ -51,7 +49,6 @@ $(document).ready(function () {
 });
 
 function logout() {
-    alert("logging out");
     $.post("/php/logout.php")
     .done(function( data ){
         location.reload();
@@ -99,22 +96,22 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#register').submit(function(e){
         var domainName = "";
-        if($("#domain").val() == "user"){
-            domainName = "/php/users/create.php";
+        if($("#rDomain").val() == "user"){
+            domainName = "/php/administrators/create_users.php";
         }
-        else if($("#domain").val() == "entre"){
-            domainName = "/php/entrepreneurs/create.php";
+        else if($("#rDomain").val() == "entre"){
+            domainName = "/php/administrators/create_entrepreneurs.php";
         }
-        else if($("#domain").val() == "admin"){
-            domainName = "/php/administrators/create.php";
+        else if($("#rDomain").val() == "admin"){
+            domainName = "/php/administrators/create_administrators.php";
         }
         $.post(domainName, 
         {
-          username: $("#username").val(),
-          password: $("#password").val()
+          username: $("#rUsername").val(),
+          password: $("#rPassword").val()
         })
         .done(function( data ) {
-            location.reload();
+            //location.reload();
         });
     });
 });
@@ -132,7 +129,6 @@ $(document).ready(function () {
         var _startDate = $("#create #startDate").val();
         var _duration = $("#dur").val();
         var _category = $("#theCategory").val();
-        alert(_title+", "+_description+", "+_goal+", "+_startDate+", "+_duration+", "+_category);
         $.get("/php/session.php")
         .done(function (data){
             var obj = JSON.parse(data);
@@ -147,7 +143,7 @@ $(document).ready(function () {
                 amount: _goal,
                 remaining_amount: _goal
             }).done(function ( data ){
-                alert(data);
+                
             }); 
         });
         $("#openCreate").popup('hide');
@@ -184,24 +180,18 @@ function toModify(row){
         var _startDate = $("#modify #mStartDate").val();
         var _duration = $("#mDur").val();
         var _category = $("#mCategory").val();
-        alert(_title+", "+_description+", "+_goal+", "+_startDate+", "+_duration+", "+_category);
-        $.post("/php/administrators/delete_project.php", 
+        $.post("/php/administrators/modify_project.php", 
         {
-            title: theTitle
+            original_title: theTitle,
+            title: _title,
+            description: _description,
+            remaining_amount: _fundRem,
+            amount: _goal,
+            start_date: _startDate,
+            duration: _duration,
+            category: _category
         }).done(function(data){
-            $.post("/php/entrepreneurs/insert_project.php", 
-            {
-                title: _title,
-                description: _description,
-                remaining_amount: _fundRem,
-                amount: _goal,
-                start_date: _startDate,
-                duration: _duration,
-                category: _category
-            }).done(function(data){
-                alert(data);
-                //location.reload();
-            });
+            location.reload();
         });
     });
 }
@@ -234,7 +224,7 @@ function deleteRow(row){
         title: theTitle
     })
     .done( function( data ){
-        alert("done");
+        
     });
 }
 
@@ -259,17 +249,14 @@ $(document).ready(function(){
                titles.push(value.title); 
             });
             var rows = $('table tr:gt(0)');
-            alert(titles);
             rows.each(function (index, value) {
                 title = value.getElementsByTagName("A")[0].innerHTML;
-                alert(title);
                 var isSearch = false;
                 for(i=0; i<titles.length; i++){
                     if(title == titles[i]){
                         isSearch = true;
                     }
                 }
-                alert(isSearch);
                 if (isSearch) {
                     $(this).show();
                 } else {
@@ -293,13 +280,11 @@ $(document).on("submit", "#userFund", function(e){
         }
     }
     //var _amt = $("#toFund").val();
-    alert(_amt+", "+_title);
     $.post("/php/users/funding.php", 
     {
         project_title: _title,
         amount_pledged: _amt
     }).done(function(data){
-        alert("done");
         location.reload();
     });
 });
