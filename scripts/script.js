@@ -37,7 +37,7 @@ $(document).ready(function () {
                     "<input type='submit' value='fund'></form>");
                 fundButton.appendTo(projectPart);
             } else if(obj.type == "entrepreneurs"){
-                var createButton = $("<div id='create-form' style='margin-top: 10px; margin-left: 20px'>"+
+                var createButton = $("<div id='create-form' style='margin-top: 10px; margin-right: 20px'>"+
                     "<button class='openCreate_open' href='#openCreate'>Create Project</button></div>");
                 createButton.appendTo(createPart);
             } else {
@@ -222,8 +222,27 @@ function deleteRow(row){
 }
 
 $(document).ready(function() {
-    searcher();
     $('.table2').tablesorter();
+});
+
+$(document).ready(function () {
+    $('#openSearch').popup();
+});
+
+$(document).ready(function(){
+    $("#search").submit(function(e){
+        e.preventDefault();
+        $.post("/php/projects/search.php", 
+        {
+            /*title: $("#theTitle").val(),
+            category: $("#category").val(),
+            :$("#goal").val();
+            :$("#fund").val();
+            :$("#ename").val();*/
+        }).done(function( data ) {
+            
+        });
+    });
 });
 
 searcher = function() {
@@ -355,7 +374,7 @@ function addRow(type, title, user, desc, goal, start, dur, cat){
     } else if(type == "users") {
         titleUser.prependTo(table);
     } else {
-        titleEntre.prependTo(table);
+        titleDef.prependTo(table);
     }
 }
 

@@ -17,18 +17,7 @@
                 <h1>CROWDFUND!</h1>
             </div>
             <div class="column">
-                <form id="searchBar" method="get" style="margin-top: 10px">
-                    <div style="float: left">
-                        <input type="text" id="search" placeholder="Search" style="width: 70%">
-                        <select id="field" name="field" style="width: 25%">
-                            <option value="title" selected>Title</option>
-                            <option value="fund">Funding</option>
-                            <option value="cat">Category</option>
-                            <option value="name">Entrepreneur</option>
-                            <option value="remain">Remaining Amount</option>
-                        </select>
-                    </div>
-                </form>  
+                <button class='openSearch_open' href='#openSearch' style="width: 300px; margin-top: 10px">Search Projects</button>
             </div>
             <div id="theCreate">
             </div>
@@ -193,7 +182,7 @@
                         <option value="entre">Entrepreneur</option>
                         <option value="admin">Administrator</option>
                     </select>
-                    <ul style="text-align: right"><input type="submit">
+                    <ul style="text-align: right"><input type="submit" value="Log in">
                         <button class='openRegister_open' href='#openRegister' style="margin-left: 20px">Register</button></ul>
                 </div>
             </form>
@@ -210,7 +199,25 @@
                         <option value="entre">Entrepreneur</option>
                         <option value="admin">Administrator</option>
                     </select>
-                    <ul style="text-align: right"><input type="submit"></ul>
+                    <ul style="text-align: right"><input type="submit" value="Register"></ul>
+                </div>
+            </form>
+        </div>
+        <div id="openSearch" class="openSearch-popup">
+            <form id="search" action="" method="get">
+                <div>
+                    <h3 id="searchSheet">Search</h3>
+                    <label for='theTitle'>Title: </label>
+                    <input type='text' name='theTitle' id='theTitle'>
+                    <label for='category'>Category: </label>
+                    <input type='text' name='category' id='category'>
+                    <label for='goal'>Goal: </label>
+                    <input type='number' name='goal' id='goal'>
+                    <label for='fund'>Fund Remaining: </label>
+                    <input type='number' name='fund' id='fund'>
+                    <label for='eName'>Entreprenur: </label>
+                    <input type='text' name='eName' id='eName'>
+                    <ul style="text-align: right"><input type="submit" value="Search"></ul>
                 </div>
             </form>
         </div>
