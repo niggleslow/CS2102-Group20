@@ -19,7 +19,7 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 $title = $_POST["title"];
 
 
-$query = "DELETE FROM project WHERE title = '$title';";
+$query = "DELETE FROM projects WHERE title = '$title';";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 

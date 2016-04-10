@@ -20,6 +20,10 @@ $count = 0;
 
 foreach ($_POST as $key => $value){
 	
+	if ($value == ""){
+		continue;
+	}
+	
 	if ($key == "remaining_amount"){
 		$statement = "$statement p.$key <= $value";
 	} else {
@@ -35,7 +39,7 @@ foreach ($_POST as $key => $value){
 
 // select a row from the database for login and check that array is not empty
 $query = "SELECT *
-FROM project p
+FROM projects p
 WHERE $statement";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 

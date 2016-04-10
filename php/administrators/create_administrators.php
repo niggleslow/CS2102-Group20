@@ -16,19 +16,14 @@ function pr($result){
 
 $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres password=root") or die("Could not connect: " . pg_last_error());
 
-$title = $_POST["title"];
+$username = $_POST["username"];
+$password = $_POST["password"];
 
 
 // select a row from the database for login and check that array is not empty
-$query = "DELETE FROM projects WHERE title = '$title'";
+$query = "INSERT INTO administrators(username, password) VALUES ($username, $password)";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
-	
-}
-
-$answer = json_encode($answer);
-
-echo $answer;
 
 
 ?>
