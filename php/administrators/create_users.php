@@ -21,7 +21,7 @@ $password = $_POST["password"];
 
 
 // select a row from the database for login and check that array is not empty
-$query = "INSERT INTO administrators(username, password) VALUES ($username, $password)";
+$query = "INSERT INTO users(username, password) VALUES ($username, $password)";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 
