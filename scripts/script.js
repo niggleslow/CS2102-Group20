@@ -3,15 +3,26 @@
   - The table sorter is using a string sort instead of a numeric sort as you would expect.
   */
 
-function fillTable(){
-    $.get("/php")
+function fillTable(type){
+    $.get("/php/all_projects.php")
     .done(function( data ) {
         var obj = JSON.parse(data);
-        /*for(){
-            addRow();
-        }*/
+        $.each(obj, function(index, value){
+                    //type, title, user, desc, goal, start, dur, cat
+            addRow(type, value.title, value.e_name, value.description, 
+                    value.amount, value.start_date, value.duration, value.category);
+        });
     });
 }
+
+/*var modifyButton = $("<button class='openModify_open' onclick='toModify(this)'>Modify</button>");
+var deleteButton = $("<button onclick='deleteRow(this)' style='margin-left: 10px'>Delete</button>");
+modifyButton.appendTo(projectPart);
+deleteButton.appendTo(projectPart);
+var fundButton = $("<form id='fund'>"+
+    "<input type='number' name='fund' id='fund' placeholder='0' style='width: 20%'>"+
+    "<input type='submit' value='fund'></form>");
+fundButton.appendTo(projectPart);*/
 
 $(document).ready(function () {
     $.get( "/php/session.php")
@@ -19,29 +30,14 @@ $(document).ready(function () {
         obj = JSON.parse(data);
         var loginPart = document.getElementById("theLogin");
         var createPart = document.getElementById("theCreate");
-        var projectPart = document.getElementById("theProject");
+        fillTable(obj.type);
         if(obj.logged_in == "true"){
             var text = $("<h5 style='text-align: right; margin-top: 10px; margin-right: 20px'>Welcome <a href='#' onclick='logout()'>" + obj.username + "</a></h5>");
             text.appendTo(loginPart);
-            if(obj.type == "administrators"){
-                var createButton = $("<div id='create-form' style='margin-top: 10px; margin-right: 20px'>"+
-                    "<button class='openCreate_open' href='#openCreate'>Create Project</button></div>");
-                var modifyButton = $("<button class='openModify_open' onclick='toModify(this)'>Modify</button>");
-                var deleteButton = $("<button onclick='deleteRow(this)' style='margin-left: 10px'>Delete</button>");
-                createButton.appendTo(createPart);
-                modifyButton.appendTo(projectPart);
-                deleteButton.appendTo(projectPart);
-            } else if(obj.type == "users"){
-                var fundButton = $("<form id='fund'>"+
-                    "<input type='number' name='fund' id='fund' placeholder='0' style='width: 20%'>"+
-                    "<input type='submit' value='fund'></form>");
-                fundButton.appendTo(projectPart);
-            } else if(obj.type == "entrepreneurs"){
+            if(obj.type == "administrators" || obj.type == "entrepreneurs"){
                 var createButton = $("<div id='create-form' style='margin-top: 10px; margin-right: 20px'>"+
                     "<button class='openCreate_open' href='#openCreate'>Create Project</button></div>");
                 createButton.appendTo(createPart);
-            } else {
-                alert("hmm?");
             }
         } else {
             var button = $(
@@ -54,7 +50,10 @@ $(document).ready(function () {
 
 function logout() {
     alert("logging out");
+    $.post("/php/logout.php")
+    .done(function( data ){
         location.reload();
+    });    
 }
 
 $(document).ready(function () {
@@ -80,12 +79,9 @@ $(document).ready(function(){
           password: $("#password").val()
         })
         .done(function( data ) {
-            //alert(data);
             var obj = JSON.parse(data);
             if(obj.status == "true"){
-                $(document).ready(function () {
-                    location.reload();
-                });
+                location.reload();
             } else if(obj.status == "false"){
                 var words = document.getElementById("loginSheet");
                 words.innerHTML = "Sorry, login failed. Please try again."
@@ -134,27 +130,22 @@ $(document).ready(function () {
         var _startDate = $("#create #startDate").val();
         var _duration = $("#dur").val();
         var _category = $("#category").val();
-        $.get( "/php/session.php")
-          .done(function( data ) {
-            obj = JSON.parse(data);
-            var domainName;
-            if(obj.type == "administrators"){
-                domainName = "/php/administrators/insert_project.php";
-            } else if(obj.type == "entrepreneurs"){
-                domainName = "/php/entrepreneurs/insert_project.php";
-            }
+        $.get("/php/session.php")
+        .done(function (data){
+            var obj = JSON.parse(data);
             addRow(obj.type, _title, obj.username, _description, _goal, _startDate, _duration, _category);
-            $.post(domainName, 
+            $.post("/php/entrepreneurs/insert_project.php", 
             {
                 title: _title,
                 description: _description,
-                startdate: _startDate,
+                start_date: _startDate,
                 duration: _duration,
-                catogories: _category,
-                funding: _goal
+                category: _category,
+                amount: _goal,
+                remaining_amount: _goal
             }).done(function ( data ){
-                
-            });
+                alert(data);
+            }); 
         });
         $("#openCreate").popup('hide');
     });
@@ -169,22 +160,43 @@ function toModify(row){
             theTitle = el.getElementsByTagName("A")[0].innerText;
         }
     }
+    $.post("/php/users/search.php", 
+    {
+        title: theTitle
+    }).done(function(data){
+        var val = JSON.parse(data);
+        if(val.length == 1){
+            var obj = val[0];
+            //title, desc, fund, goal, start, dur, cat
+            setUpModPopup(theTitle, obj.description, obj.remaining_amount, obj.amount, obj.start_date, obj.duration, obj.category);
+        }
+    });
     // query data for the other info, then create ModPopUp from info
-    setUpModPopup(theTitle, "test lalala", "90", "100", "2000-11-11", "6", "Movie");
     $('#modify').submit(function(e){
         e.preventDefault();
-        var title = $("#newTitle").val();
-        var description = $("#desc").val();
-        var goal = $("#goal").val();
-        var fundRem = $("#fund").val();
-        var startDate = $("#modify #startDate").val();
-        var duration = $("#dur").val();
-        var category = $("category").val();
-        $.post("/php/administrators/modify.php", 
+        var _title = $("#newTitle").val();
+        var _description = $("#desc").val();
+        var _goal = $("#goal").val();
+        var _fundRem = $("#fund").val();
+        var _startDate = $("#modify #startDate").val();
+        var _duration = $("#dur").val();
+        var _category = $("category").val();
+        $.post("/php/administrators/delete_project.php", 
         {
             title: theTitle
         }).done(function(data){
-            location.reload();
+            $.post("/php/entrepreneurs/insert_project.php", 
+            {
+                title: _title,
+                description: _description,
+                remaining_amount: _fundRem,
+                amount: _goal,
+                start_date: _startDate,
+                duration: _duration,
+                category: _category
+            }).done(function(data){
+                location.reload();
+            });
         });
     });
 }
@@ -212,7 +224,7 @@ function deleteRow(row){
         }
     }
     document.getElementById("project-table").deleteRow(index-1);
-    $.post("/php/projects/delete.php", 
+    $.post("/php/administrators/delete-project.php", 
     {
         title: theTitle
     })
@@ -222,6 +234,7 @@ function deleteRow(row){
 }
 
 $(document).ready(function() {
+    searcher();
     $('.table2').tablesorter();
 });
 
