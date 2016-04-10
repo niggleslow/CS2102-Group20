@@ -3,6 +3,16 @@
   - The table sorter is using a string sort instead of a numeric sort as you would expect.
   */
 
+function fillTable(){
+    $.get("/php")
+    .done(function( data ) {
+        var obj = JSON.parse(data);
+        /*for(){
+            addRow();
+        }*/
+    });
+}
+
 $(document).ready(function () {
     $.get( "/php/session.php")
       .done(function( data ) {
@@ -11,15 +21,16 @@ $(document).ready(function () {
         var createPart = document.getElementById("theCreate");
         var projectPart = document.getElementById("theProject");
         if(obj.logged_in == "true"){
-            var text = $("<h5 style='text-align: right; margin-right: 10px'>Welcome <a href='#logout'>" + obj.username + "</a></h5>");
+            var text = $("<h5 style='text-align: right; margin-top: 10px; margin-right: 20px'>Welcome <a href='#' onclick='logout()'>" + obj.username + "</a></h5>");
             text.appendTo(loginPart);
             if(obj.type == "administrators"){
-                var createButton = $("<div id='create-form' style='margin-top: 10px; margin-left: 20px'>"+
+                var createButton = $("<div id='create-form' style='margin-top: 10px; margin-right: 20px'>"+
                     "<button class='openCreate_open' href='#openCreate'>Create Project</button></div>");
-                var modifyButton = $("<button class='openModify_open' href='#openModify'>Modify</button>");
-                var deleteButton = $("<button href='#deleteRow'>Delete</button>");
+                var modifyButton = $("<button class='openModify_open' onclick='toModify(this)'>Modify</button>");
+                var deleteButton = $("<button onclick='deleteRow(this)' style='margin-left: 10px'>Delete</button>");
                 createButton.appendTo(createPart);
                 modifyButton.appendTo(projectPart);
+                deleteButton.appendTo(projectPart);
             } else if(obj.type == "users"){
                 var fundButton = $("<form id='fund'>"+
                     "<input type='number' name='fund' id='fund' placeholder='0' style='width: 20%'>"+
@@ -32,22 +43,19 @@ $(document).ready(function () {
             } else {
                 alert("hmm?");
             }
-        } else if(obj.logged_in == "false"){
+        } else {
             var button = $(
                 "<div id='login-form' style='text-align:right; margin-top: 10px; margin-right: 20px'>"+
                 "<button class='openlogin_open' href='#openlogin'>Log in</button></div>");
             button.appendTo(loginPart);
-        } else {
-            alert("why");
         }
     });
 });
 
-$(document).ready(function(){
-    $("#logout").click(function(){
-        
-    });             
-});
+function logout() {
+    alert("logging out");
+        location.reload();
+}
 
 $(document).ready(function () {
     $('#openlogin').popup();
@@ -87,6 +95,33 @@ $(document).ready(function(){
 });
 
 $(document).ready(function () {
+    $('#openRegister').popup();
+});
+
+$(document).ready(function () {
+    $('#register').submit(function(e){
+        var domainName = "";
+        if($("#domain").val() == "user"){
+            domainName = "/php/users/create.php";
+        }
+        else if($("#domain").val() == "entre"){
+            domainName = "/php/entrepreneurs/create.php";
+        }
+        else if($("#domain").val() == "admin"){
+            domainName = "/php/administrators/create.php";
+        }
+        $.post(domainName, 
+        {
+          username: $("#username").val(),
+          password: $("#password").val()
+        })
+        .done(function( data ) {
+            location.reload();
+        });
+    });
+});
+
+$(document).ready(function () {
     $('#openCreate').popup();
 });
 
@@ -96,7 +131,7 @@ $(document).ready(function () {
         var _title = $("#newTitle").val();
         var _description = $("#desc").val();
         var _goal = $("#goal").val();
-        var _startDate = $("startDate").val();
+        var _startDate = $("#create #startDate").val();
         var _duration = $("#dur").val();
         var _category = $("#category").val();
         $.get( "/php/session.php")
@@ -108,7 +143,7 @@ $(document).ready(function () {
             } else if(obj.type == "entrepreneurs"){
                 domainName = "/php/entrepreneurs/insert_project.php";
             }
-            fillTable(obj.type, _title, obj.username, _description, _goal, _startDate, _duration, _category);
+            addRow(obj.type, _title, obj.username, _description, _goal, _startDate, _duration, _category);
             $.post(domainName, 
             {
                 title: _title,
@@ -121,27 +156,41 @@ $(document).ready(function () {
                 
             });
         });
+        $("#openCreate").popup('hide');
     });
 });
 
-$(document).ready(function () {
-    $('#openModify').popup();
-});
-
-$(document).ready(function () {
+function toModify(row){
+    el = row;
+    var theTitle;
+    while(el.parentNode) {
+        el = el.parentNode;
+        if(el.className == "row"){
+            theTitle = el.getElementsByTagName("A")[0].innerText;
+        }
+    }
+    // query data for the other info, then create ModPopUp from info
+    setUpModPopup(theTitle, "test lalala", "90", "100", "2000-11-11", "6", "Movie");
     $('#modify').submit(function(e){
         e.preventDefault();
         var title = $("#newTitle").val();
         var description = $("#desc").val();
         var goal = $("#goal").val();
-        var funded = $("#funded").val();
-        var backers = $("#backers").val();
+        var fundRem = $("#fund").val();
+        var startDate = $("#modify #startDate").val();
         var duration = $("#dur").val();
-        $.get( "/php/session.php")
-          .done(function( data ) {
-            obj = JSON.parse(data);
+        var category = $("category").val();
+        $.post("/php/administrators/modify.php", 
+        {
+            title: theTitle
+        }).done(function(data){
+            location.reload();
         });
     });
+}
+
+$(document).ready(function () {
+    $('#openModify').popup();
 });
 
 function deleteRow(row){
@@ -192,7 +241,29 @@ searcher = function() {
     });
 }
 
-function fillTable(type, title, user, desc, goal, start, dur, cat){
+function setUpModPopup(title, desc, fund, goal, start, dur, cat){
+    var thePop = document.getElementById('openModify');
+    var list = thePop.getElementsByClassName('toEdit');
+    for(i = 0; i < list.length; i++){
+        if(list[i].id == ('newTitle')){
+            list[i].setAttribute('value', title);
+        } else if(list[i].id == ('desc')){
+            list[i].innerHTML = desc;
+        } else if(list[i].id == ('category')){
+            list[i].setAttribute('value', cat);
+        } else if(list[i].id == ('fund')){
+            list[i].setAttribute('value', fund);
+        } else if(list[i].id == ('goal')){
+            list[i].setAttribute('value', goal);
+        } else if(list[i].id == ('startDate')){
+            list[i].setAttribute('value', start);
+        } else if(list[i].id == ('dur')){
+            list[i].setAttribute('value', dur);
+        }
+    }
+}
+
+function addRow(type, title, user, desc, goal, start, dur, cat){
     var table = document.getElementById("project-table");
     
     var titleAdmin = $([
@@ -204,7 +275,7 @@ function fillTable(type, title, user, desc, goal, start, dur, cat){
         "                <h5>by <a href='#'>"+user+"</a></h5>",
         "            </div>",
         "            <div class='column' id='theProject' style='text-align: right'>",
-        "                <button class='openModify_open' href='#openModify'>Modify</button>",
+        "                <button class='openModify_open' onclick='toModify(this)'>Modify</button>",
         "                <button onclick='deleteRow(this)'>Delete</button>",
         "            </div>",
         "        </div>",
@@ -216,33 +287,7 @@ function fillTable(type, title, user, desc, goal, start, dur, cat){
         "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
         "        </div>",
         "    </td>",
-        "    <td class='money'>$0</td>",
         "    <td class='money'>$"+goal+"</td>",
-        "    <td class='date'>"+start+"</td>",
-        "    <td class='days'>"+dur+"</td>",
-        "    <td class='text'>"+cat+"</td>",
-        "</tr>"
-    ].join("\n"));
-    var titleEntre = $([
-        "<tr class: 'good'>",
-        "    <td id='title'>",
-        "        <div class='row'>",
-        "            <div class='column'>",
-        "                <h3><a href='#'>"+title+"</a></h3>",
-        "                <h5>by <a href='#'>"+user+"</a></h5>",
-        "            </div>",
-        "            <div class='column' id='theProject' style='text-align: right'>",
-        "            </div>",
-        "        </div>",
-        "        <div class='row'>",
-        "            <div class='description'>"+desc,
-        "            </div>",
-        "        </div>",
-        "        <div class='pledge-bar bg-grey'>",
-        "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
-        "        </div>",
-        "    </td>",
-        "    <td class='money'>$0</td>",
         "    <td class='money'>$"+goal+"</td>",
         "    <td class='date'>"+start+"</td>",
         "    <td class='days'>"+dur+"</td>",
@@ -272,7 +317,33 @@ function fillTable(type, title, user, desc, goal, start, dur, cat){
         "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
         "        </div>",
         "    </td>",
-        "    <td class='money'>$0</td>",
+        "    <td class='money'>$"+goal+"</td>",
+        "    <td class='money'>$"+goal+"</td>",
+        "    <td class='date'>"+start+"</td>",
+        "    <td class='days'>"+dur+"</td>",
+        "    <td class='text'>"+cat+"</td>",
+        "</tr>"
+    ].join("\n"));
+    var titleDef = $([
+        "<tr class: 'good'>",
+        "    <td id='title'>",
+        "        <div class='row'>",
+        "            <div class='column'>",
+        "                <h3><a href='#'>"+title+"</a></h3>",
+        "                <h5>by <a href='#'>"+user+"</a></h5>",
+        "            </div>",
+        "            <div class='column' id='theProject' style='text-align: right'>",
+        "            </div>",
+        "        </div>",
+        "        <div class='row'>",
+        "            <div class='description'>"+desc,
+        "            </div>",
+        "        </div>",
+        "        <div class='pledge-bar bg-grey'>",
+        "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
+        "        </div>",
+        "    </td>",
+        "    <td class='money'>$"+goal+"</td>",
         "    <td class='money'>$"+goal+"</td>",
         "    <td class='date'>"+start+"</td>",
         "    <td class='days'>"+dur+"</td>",
@@ -281,10 +352,10 @@ function fillTable(type, title, user, desc, goal, start, dur, cat){
     ].join("\n"));
     if(type == "administrators"){
         titleAdmin.prependTo(table);
-    } else if(type == "entrepreneurs"){
-        titleEntre.prependTo(table);
     } else if(type == "users") {
         titleUser.prependTo(table);
+    } else {
+        titleEntre.prependTo(table);
     }
 }
 

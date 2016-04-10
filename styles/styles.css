@@ -5,7 +5,7 @@
     margin-bottom: 10px;
 }
 
-.openlogin-popup, .openModify-popup, .openCreate-popup{
+.openlogin-popup, .openModify-popup, .openCreate-popup, .openRegister-popup{
     background-color:#FFFFFF;
     border:1px solid #999999;
     cursor:default;

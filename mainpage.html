@@ -17,18 +17,29 @@
                 <h1>CROWDFUND!</h1>
             </div>
             <div class="column">
-                <input type="text" id="search" placeholder="Search by Title" style="margin-top: 10px">
+                <form id="searchBar" method="get" style="margin-top: 10px">
+                    <div style="float: left">
+                        <input type="text" id="search" placeholder="Search" style="width: 70%">
+                        <select id="field" name="field" style="width: 25%">
+                            <option value="title" selected>Title</option>
+                            <option value="fund">Funding</option>
+                            <option value="cat">Category</option>
+                            <option value="name">Entrepreneur</option>
+                            <option value="remain">Remaining Amount</option>
+                        </select>
+                    </div>
+                </form>  
             </div>
-            <div class="column" id="theCreate">
+            <div id="theCreate">
             </div>
-            <div class="column" id="theLogin">
+            <div id="theLogin">
             </div>
         </div>
         <table class="table2 tablesorter">
             <thead>
                 <tr class="header">
                     <th class="name">Project</th>
-                    <th>Funded</th>
+                    <th>Funding Remaining</th>
                     <th>Goal</th>
                     <th>Start Date</th>
                     <th>Days to go</th>
@@ -36,7 +47,7 @@
                 </tr>
             </thead>
             <tbody id="project-table">
-                <tr class="good">
+                <!--<tr class="good">
                     <td id="title">
                         <div class="row">
                             <div class="column">
@@ -44,7 +55,6 @@
                                 <h5>by <a href="#">Heart Machine</a></h5>
                             </div>
                             <div class="column" id="theProject" style="text-align: right">
-                                <button onclick='deleteRow(this)'>Delete</button>
                             </div>
                         </div>
                         <div class="row">
@@ -57,7 +67,7 @@
                             <div class="pledge-bar bg-green" style="width: 100%"></div>
                         </div>
                     </td>
-                    <td class="money">$53890</td>
+                    <td class="money">$0</td>
                     <td class="money">$24500</td>
                     <td class="people">5322</td>
                     <td class="days">1</td>
@@ -74,7 +84,7 @@
                             <div class="pledge-bar bg-green" style="width: 100%"></div>
                         </div>
                     </td>
-                    <td class="money">$1776</td>
+                    <td class="money">$776</td>
                     <td class="money">$1500</td>
                     <td class="people">1738</td>
                     <td class="days">5</td>
@@ -110,7 +120,7 @@
                     <td class="money">$1300</td>
                     <td class="people">78</td>
                     <td class="days">23</td>
-                </tr>
+                </tr>-->
             </tbody>
         </table>
         <footer>
@@ -118,28 +128,30 @@
         </footer>
         <!------------------------ These html are just the pop-ups for the various buttons -------------------->
         <div id="openModify" class="openModify-popup" style="width: 500px">
-            <form id="modify" action="" method="get">
+            <form id='modify' method='get'>
                 <div>
-                    <h3>Editing Project</h3>
-                    <label for="newTitle">Title: </label>
-                    <input type="text" name="newTitle" id="newTitle" placeholder="Name of the project">
-                    <label for="desc">Description: </label>
-                    <textarea name="desc" id="desc" placeholder="Short description of the project"></textarea>
-                    <div class="input-intable">
-                        <div class="row">
-                            <div class="cell"><label for="goal">Goal ($): </label>
-                            <input type="number" name="goal" id="goal" placeholder="0"></div>
-                            <div class="cell"><label for="funded">Funded ($): </label>
-                            <input type="number" name="funded" id="funded" placeholder="0"></div>
+                   <h3>Editing Project</h3>
+                    <label for='newTitle'>Title: </label>
+                    <input class="toEdit" type='text' name='newTitle' id='newTitle' value="">
+                    <label for='desc'>Description: </label>
+                    <textarea class="toEdit" name='desc' id='desc'></textarea>
+                    <label for='category'>Category: </label>
+                    <input class="toEdit" type='text' name='category' id='category' value="" style='width: 40%'>
+                    <div class='input-intable'>
+                       <div class='row'>
+                            <div class='cell'><label for='fund'>Funding Remaining ($): </label>
+                            <input class="toEdit" type='number' name='fund' id='fund' value=""></div>
+                            <div class='cell'><label for='goal'>Goal ($): </label>
+                            <input class="toEdit" type='number' name='goal' id='goal' value=""></div>
                         </div>
-                        <div class="row">
-                            <div class="cell"><label for="backers">Backers: </label>
-                            <input type="number" name="backers" id="backers" placeholder="0"></div>
-                            <div class="cell"><label for="dur">Duration (Days): </label>
-                            <input type="number" name="dur" id="dur" placeholder="0"></div>
+                        <div class='row'>
+                           <div class='cell'><label for='startDate'>Start Date: </label>
+                            <input class="toEdit" type='date' name='startDate' id='startDate' value=""></div>
+                            <div class='cell'><label for='dur'>Duration (Days): </label>
+                            <input class="toEdit" type='number' name='dur' id='dur' value=""></div>
                         </div>
                     </div>
-                    <ul style="text-align: right"><input type="submit"></ul>
+                    <ul style='text-align: right'><input type='submit'></ul>
                 </div>
             </form>
         </div>
@@ -154,7 +166,7 @@
                     <div class="input-intable">
                         <div class="row">
                             <div class="cell"><label for="startDate">Start Date: </label>
-                            <input type="date" name="startDate" id="startDate"></div>
+                            <input type="date" name="startDate" id="startDate" value="2000-01-01"></div>
                             <div class="cell"><label for="dur">Duration (Days): </label>
                             <input type="number" name="dur" id="dur" value="0" placeholder="0"></div>
                         </div>
@@ -181,15 +193,26 @@
                         <option value="entre">Entrepreneur</option>
                         <option value="admin">Administrator</option>
                     </select>
-                    <input type="submit">
+                    <ul style="text-align: right"><input type="submit">
+                        <button class='openRegister_open' href='#openRegister' style="margin-left: 20px">Register</button></ul>
                 </div>
             </form>
         </div>
-        <div id="loginSuccess" class="loginSuccess-popup">
-            <button>Welcome <a href="#" class="displayUSer"></a></button>
-        </div>
-        <div id="loginFailed" class="loginFailed-popup">
-            <h3>Sorry, username or password doesn't exist.</h3>
+        <div id="openRegister" class="openRegister-popup">
+            <form id="register" action="" method="post">
+                <div>
+                    <h3 id="registerSheet">Register</h3>
+                    <input type="text" name="username" id="username" placeholder="Username">
+                    <input type="password" name="password" id="password" placeholder="Password">
+                    <select id="domain" name="domain" required>
+                        <option value="" disabled selected hidden>Domain</option>
+                        <option value="user">User</option>
+                        <option value="entre">Entrepreneur</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                    <ul style="text-align: right"><input type="submit"></ul>
+                </div>
+            </form>
         </div>
         <!-------------------------------------- End of button pop ups ------------------------------------->
     </body>
