@@ -4,7 +4,7 @@ session_start();
 
 $answer = array();
 
-if (isset($answer["username"])){
+if (isset($_SESSION["username"])){
 	$answer["username"] = $_SESSION["username"];
 	$answer["logged_in"] = $_SESSION["logged_in"];
 	$answer["type"] = $_SESSION["type"];
