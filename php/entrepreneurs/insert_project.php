@@ -26,7 +26,7 @@ $funding = $_POST["funding"];
 $username = $_SESSION["username"];
 
 // select a row from the database for login and check that array is not empty
-$query = "INSERT INTO projects(title, description, startdate, duration, category, remaining_amount, entrepreneur) VALUES ('$title', '$description', '$startdate', '$duration', '$categories', '$funding', '$username')";
+$query = "INSERT INTO projects(title, description, startdate, duration, category, remaining_amount, e_name, amount) VALUES ('$title', '$description', '$startdate', '$duration', '$categories', int($funding), '$username', int($funding))";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 // select a row from the database for login and check that array is not empty
