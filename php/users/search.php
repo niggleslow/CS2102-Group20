@@ -37,6 +37,9 @@ foreach ($_POST as $key => $value){
 }
 
 
+$dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres password=root") or die("Could not connect: " . pg_last_error());
+
+
 // select a row from the database for login and check that array is not empty
 $query = "SELECT *
 FROM projects p
