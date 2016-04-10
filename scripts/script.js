@@ -126,10 +126,11 @@ $(document).ready(function () {
         e.preventDefault();
         var _title = $("#newTitle").val();
         var _description = $("#desc").val();
-        var _goal = $("#goal").val();
+        var _goal = $("#theGoal").val();
         var _startDate = $("#create #startDate").val();
         var _duration = $("#dur").val();
-        var _category = $("#category").val();
+        var _category = $("#theCategory").val();
+        alert(_title+", "+_description+", "+_goal+", "+_startDate+", "+_duration+", "+_category);
         $.get("/php/session.php")
         .done(function (data){
             var obj = JSON.parse(data);
@@ -258,6 +259,13 @@ $(document).ready(function(){
     });
 });
 
+$(document).ready(function(){
+   $("#fund").submit(function(e){
+       e.preventDefault();
+       alert("test");
+   });
+});
+
 searcher = function() {
     $('#search').keyup(function() {
         var regex = new RegExp($('#search').val(), "i");
@@ -336,7 +344,7 @@ function addRow(type, title, user, desc, goal, start, dur, cat){
         "            </div>",
         "            <div class='column' id='theProject' style='text-align: right'>",
         "                <form id='fund'>",
-        "                   <input type='number' name='fund' id='fund' placeholder='0' style='width: 20%'>",
+        "                   <input type='number' name='fund' id='fund' min='1' placeholder='1' style='width: 20%'>",
         "                   <input type='submit' value='fund'>",
         "                </form>",
         "            </div>",

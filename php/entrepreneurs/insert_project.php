@@ -19,10 +19,10 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 $title = $_POST["title"];
 $description = $_POST["description"];
 $start_date = $_POST["start_date"];
-$duration = int($_POST["duration"]);
+$duration = $_POST["duration"];
 $category = $_POST["category"];
-$amount = int($_POST["amount"]);
-$remaining_amount = int($_POST["remaining_amount"]);
+$amount = $_POST["amount"];
+$remaining_amount = $_POST["remaining_amount"];
 
 $username = $_SESSION["username"];
 

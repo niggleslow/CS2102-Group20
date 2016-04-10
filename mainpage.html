@@ -36,80 +36,6 @@
                 </tr>
             </thead>
             <tbody id="project-table">
-                <!--<tr class="good">
-                    <td id="title">
-                        <div class="row">
-                            <div class="column">
-                                <h3><a id="titleName" href="#">Hyper Light Drifter</a></h3>
-                                <h5>by <a href="#">Heart Machine</a></h5>
-                            </div>
-                            <div class="column" id="theProject" style="text-align: right">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="description">
-                                Hyper Light Drifter is a 2D Action RPG in the vein of the best 8-bit and 16-bit classics, with modernized mechanics and designs on a much grander scale.
-                                <br />Explore a beautiful, vast and ruined world riddled with unknown dangers and lost technologies. Inspired by nightmares and dreams alike.
-                            </div>
-                        </div>
-                        <div class="pledge-bar bg-grey">
-                            <div class="pledge-bar bg-green" style="width: 100%"></div>
-                        </div>
-                    </td>
-                    <td class="money">$0</td>
-                    <td class="money">$24500</td>
-                    <td class="people">5322</td>
-                    <td class="days">1</td>
-                </tr>
-                <tr class="good">
-                    <td id="title">
-                        <h3><a href="#">Factorio</a></h3>
-                        <h5>by <a href="#">Wube Software</a></h5>
-                        <div class="description">
-                            Factorio is a game in which you build and maintain factories.
-                            <br />You will be mining resources, researching technologies, building infrastructure, automating production and fighting enemies. Use your imagination to design your factory, combine simple elements into ingenious structures, apply management skills to keep it working and finally protect it from the creatures who don't really like you.
-                        </div>
-                        <div class="pledge-bar bg-grey">
-                            <div class="pledge-bar bg-green" style="width: 100%"></div>
-                        </div>
-                    </td>
-                    <td class="money">$776</td>
-                    <td class="money">$1500</td>
-                    <td class="people">1738</td>
-                    <td class="days">5</td>
-                </tr>
-                <tr class="good">
-                    <td id="title">
-                        <h3><a href="#">Quest Of Souls</a></h3>
-                        <h5>by <a href="#">King Crow Studios</a></h5>
-                        <div class="description">
-                            Multiplayer fantasy shoot 'em up RPG about a corgi dragonslayer, lizardman samurai, and a goodly lich who track down a stolen artifact!
-                        </div>
-                        <div class="pledge-bar bg-grey">
-                            <div class="pledge-bar bg-green" style="width: 21.23%"></div>
-                        </div>
-                    </td>
-                    <td class="money">$1852</td>
-                    <td class="money">$9000</td>
-                    <td class="people">123</td>
-                    <td class="days">29</td>
-                </tr>
-                <tr class="good">
-                    <td id="title">
-                        <h3><a href="#">WarCraft: Armies of Azeroth</a></h3>
-                        <h5>by <a href="#">Aleksandr Nikolaev</a></h5>
-                        <div class="description">
-                            Dream about WarCraft 3 HD? PLAY IT! Support the Armies of Azeroth mod in SC2 arcade, play for FREE!
-                        </div>
-                        <div class="pledge-bar bg-grey">
-                            <div class="pledge-bar bg-green" style="width: 3%"></div>
-                        </div>
-                    </td>
-                    <td class="money">$40</td>
-                    <td class="money">$1300</td>
-                    <td class="people">78</td>
-                    <td class="days">23</td>
-                </tr>-->
             </tbody>
         </table>
         <footer>
@@ -157,13 +83,13 @@
                             <div class="cell"><label for="startDate">Start Date: </label>
                             <input type="date" name="startDate" id="startDate" value="2000-01-01"></div>
                             <div class="cell"><label for="dur">Duration (Days): </label>
-                            <input type="number" name="dur" id="dur" value="0" placeholder="0"></div>
+                            <input type="number" name="dur" id="dur" min="1" value="1" placeholder="1"></div>
                         </div>
                         <div class="row">
-                            <div class="cell"><label for="category">Category: </label>
-                            <input type="text" name="category" id="category" value="None" placeholder="Type of project"></div>
-                            <div class="cell"><label for="goal">Goal ($): </label>
-                            <input type="number" name="goal" id="goal" value="0" placeholder="0"></div> 
+                            <div class="cell"><label for="theCategory">Category: </label>
+                            <input type="text" name="theCategory" id="theCategory" value="None" placeholder="Type of project"></div>
+                            <div class="cell"><label for="theGoal">Goal ($): </label>
+                            <input type="number" name="theGoal" id="theGoal" min="1" value="1" placeholder="1"></div> 
                         </div>
                     </div>
                     <ul style="text-align: right"><input type="submit"></ul>
