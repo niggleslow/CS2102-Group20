@@ -24,7 +24,7 @@ $amount_pledged = int($_POST["amount_pledged"]);
 $query = "INSERT INTO funding(user, project_title, amount_pledged) VALUES ('$username', '$project_title', $amount_pledged);";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
-$query = "UPDATE projects SET funding= (funding - $amount_pledged) WHERE title = '$project_title';";
+$query = "UPDATE projects SET remaining_amount= (remaining_amount - $amount_pledged) WHERE title = '$project_title';";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 
