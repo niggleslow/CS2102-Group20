@@ -30,18 +30,19 @@ foreach ($_POST as $key => $value){
 		$statement = "$statement $key = '$value'";		
 	}
 	
-	if ($count != count($_POST) - 1){
-		$statement = "$statement AND";
-	}
+	$statement = "$statement AND";
+	
 	
 }
+
+$statement = substr($statement, 0, -4);
 
 
 $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres password=root") or die("Could not connect: " . pg_last_error());
 
 
 // select a row from the database for login and check that array is not empty
-$query = "SELECT * FROM projects WHERE $statement";
+$query = "SELECT * FROM projects WHERE $statement;";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 $result = pg_fetch_all($result);
