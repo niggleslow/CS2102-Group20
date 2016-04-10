@@ -25,9 +25,9 @@ foreach ($_POST as $key => $value){
 	}
 	
 	if ($key == "remaining_amount"){
-		$statement = "$statement p.$key <= $value";
+		$statement = "$statement $key <= $value";
 	} else {
-		$statement = "$statement p.$key = '$value'";		
+		$statement = "$statement $key = '$value'";		
 	}
 	
 	if ($count != count($_POST) - 1){
@@ -41,9 +41,7 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 
 
 // select a row from the database for login and check that array is not empty
-$query = "SELECT *
-FROM projects p
-WHERE $statement";
+$query = "SELECT * FROM projects WHERE $statement";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 $result = pg_fetch_all($result);
