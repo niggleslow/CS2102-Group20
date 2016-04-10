@@ -2,6 +2,7 @@
   -Known issues:
   - The table sorter is using a string sort instead of a numeric sort as you would expect.
   */
+var rowIndex = 0;
 
 function fillTable(type){
     $.get("/php/all_projects.php")
@@ -9,8 +10,9 @@ function fillTable(type){
         var obj = JSON.parse(data);
         $.each(obj, function(index, value){
                     //type, title, user, desc, goal, start, dur, cat
-            addRow(type, value.title, value.e_name, value.description, 
+            addRow(type, value.title, value.e_name, value.description, value.remaining_amount,
                     value.amount, value.start_date, value.duration, value.category);
+            rowIndex++;
         });
     });
 }
@@ -175,13 +177,14 @@ function toModify(row){
     // query data for the other info, then create ModPopUp from info
     $('#modify').submit(function(e){
         e.preventDefault();
-        var _title = $("#newTitle").val();
-        var _description = $("#desc").val();
-        var _goal = $("#goal").val();
-        var _fundRem = $("#fund").val();
-        var _startDate = $("#modify #startDate").val();
-        var _duration = $("#dur").val();
-        var _category = $("category").val();
+        var _title = $("#mTitle").val();
+        var _description = $("#mDesc").val();
+        var _goal = $("#mGoal").val();
+        var _fundRem = $("#mFund").val();
+        var _startDate = $("#modify #mStartDate").val();
+        var _duration = $("#mDur").val();
+        var _category = $("#mCategory").val();
+        alert(_title+", "+_description+", "+_goal+", "+_startDate+", "+_duration+", "+_category);
         $.post("/php/administrators/delete_project.php", 
         {
             title: theTitle
@@ -196,7 +199,8 @@ function toModify(row){
                 duration: _duration,
                 category: _category
             }).done(function(data){
-                location.reload();
+                alert(data);
+                //location.reload();
             });
         });
     });
@@ -225,7 +229,7 @@ function deleteRow(row){
         }
     }
     document.getElementById("project-table").deleteRow(index-1);
-    $.post("/php/administrators/delete-project.php", 
+    $.post("/php/administrators/delete_project.php", 
     {
         title: theTitle
     })
@@ -234,11 +238,6 @@ function deleteRow(row){
     });
 }
 
-$(document).ready(function() {
-    searcher();
-    $('.table2').tablesorter();
-});
-
 $(document).ready(function () {
     $('#openSearch').popup();
 });
@@ -246,64 +245,88 @@ $(document).ready(function () {
 $(document).ready(function(){
     $("#search").submit(function(e){
         e.preventDefault();
-        $.post("/php/projects/search.php", 
+        $.post("/php/users/search.php", 
         {
-            /*title: $("#theTitle").val(),
-            category: $("#category").val(),
-            :$("#goal").val();
-            :$("#fund").val();
-            :$("#ename").val();*/
+            title: $("#sTitle").val(),
+            category: $("#sCategory").val(),
+            amount: $("#sGoal").val(),
+            remaining_amount: $("#sFund").val(),
+            e_name: $("#eName").val()
         }).done(function( data ) {
-            
-        });
-    });
-});
-
-$(document).ready(function(){
-   $("#fund").submit(function(e){
-       e.preventDefault();
-       alert("test");
-   });
-});
-
-searcher = function() {
-    $('#search').keyup(function() {
-        var regex = new RegExp($('#search').val(), "i");
-        var rows = $('table tr:gt(0)');
-        rows.each(function (index) {
-            title = $(this).children("#title").html()
-                if (title.search(regex) != -1) {
+            var obj = JSON.parse(data);
+            var titles = [];
+            $.each(obj, function(index, value){
+               titles.push(value.title); 
+            });
+            var rows = $('table tr:gt(0)');
+            alert(titles);
+            rows.each(function (index, value) {
+                title = value.getElementsByTagName("A")[0].innerHTML;
+                alert(title);
+                var isSearch = false;
+                for(i=0; i<titles.length; i++){
+                    if(title == titles[i]){
+                        isSearch = true;
+                    }
+                }
+                alert(isSearch);
+                if (isSearch) {
                     $(this).show();
                 } else {
                     $(this).hide();
                 }
+            });
         });
+        $("#openSearch").popup('hide');
     });
-}
+});
+
+$(document).on("submit", "#userFund", function(e){
+    e.preventDefault();
+    var el = this;
+    var _amt = el.getElementsByTagName('input')[0].value;
+    var _title;
+    while(el.parentNode) {
+        el = el.parentNode;
+        if(el.className == "row"){
+            _title = el.getElementsByTagName("A")[0].innerHTML;
+        }
+    }
+    //var _amt = $("#toFund").val();
+    alert(_amt+", "+_title);
+    $.post("/php/users/funding.php", 
+    {
+        project_title: _title,
+        amount_pledged: _amt
+    }).done(function(data){
+        alert("done");
+        location.reload();
+    });
+});
 
 function setUpModPopup(title, desc, fund, goal, start, dur, cat){
     var thePop = document.getElementById('openModify');
     var list = thePop.getElementsByClassName('toEdit');
     for(i = 0; i < list.length; i++){
-        if(list[i].id == ('newTitle')){
+        if(list[i].id == ('mTitle')){
             list[i].setAttribute('value', title);
-        } else if(list[i].id == ('desc')){
+        } else if(list[i].id == ('mDesc')){
             list[i].innerHTML = desc;
-        } else if(list[i].id == ('category')){
+        } else if(list[i].id == ('mCategory')){
             list[i].setAttribute('value', cat);
-        } else if(list[i].id == ('fund')){
+        } else if(list[i].id == ('mFund')){
             list[i].setAttribute('value', fund);
-        } else if(list[i].id == ('goal')){
+        } else if(list[i].id == ('mGoal')){
             list[i].setAttribute('value', goal);
-        } else if(list[i].id == ('startDate')){
+        } else if(list[i].id == ('mStartDate')){
             list[i].setAttribute('value', start);
-        } else if(list[i].id == ('dur')){
+        } else if(list[i].id == ('mDur')){
             list[i].setAttribute('value', dur);
         }
     }
 }
 
-function addRow(type, title, user, desc, goal, start, dur, cat){
+function addRow(type, title, user, desc, rem, goal, start, dur, cat){
     var table = document.getElementById("project-table");
     
     var titleAdmin = $([
@@ -327,7 +350,7 @@ function addRow(type, title, user, desc, goal, start, dur, cat){
         "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
         "        </div>",
         "    </td>",
-        "    <td class='money'>$"+goal+"</td>",
+        "    <td class='money'>$"+rem+"</td>",
         "    <td class='money'>$"+goal+"</td>",
         "    <td class='date'>"+start+"</td>",
         "    <td class='days'>"+dur+"</td>",
@@ -343,8 +366,8 @@ function addRow(type, title, user, desc, goal, start, dur, cat){
         "                <h5>by <a href='#'>"+user+"</a></h5>",
         "            </div>",
         "            <div class='column' id='theProject' style='text-align: right'>",
-        "                <form id='fund'>",
-        "                   <input type='number' name='fund' id='fund' min='1' placeholder='1' style='width: 20%'>",
+        "                <form id='userFund'>",
+        "                   <input type='number' name='toFund' id='toFund' min='1' value='1' placeholder='1' style='width: 20%'>",
         "                   <input type='submit' value='fund'>",
         "                </form>",
         "            </div>",
@@ -357,7 +380,7 @@ function addRow(type, title, user, desc, goal, start, dur, cat){
         "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
         "        </div>",
         "    </td>",
-        "    <td class='money'>$"+goal+"</td>",
+        "    <td class='money'>$"+rem+"</td>",
         "    <td class='money'>$"+goal+"</td>",
         "    <td class='date'>"+start+"</td>",
         "    <td class='days'>"+dur+"</td>",
@@ -383,7 +406,7 @@ function addRow(type, title, user, desc, goal, start, dur, cat){
         "            <div class='pledge-bar bg-green' style='width: 100%'></div>",
         "        </div>",
         "    </td>",
-        "    <td class='money'>$"+goal+"</td>",
+        "    <td class='money'>$"+rem+"</td>",
         "    <td class='money'>$"+goal+"</td>",
         "    <td class='date'>"+start+"</td>",
         "    <td class='days'>"+dur+"</td>",

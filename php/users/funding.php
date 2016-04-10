@@ -18,15 +18,22 @@ $dbconn = pg_connect("host=localhost port=5432 dbname=crowdfunding user=postgres
 
 $username = $_SESSION["username"];
 $project_title = $_POST["project_title"];
-$amount_pledged = int($_POST["amount_pledged"]);
+$amount_pledged = $_POST["amount_pledged"];
 
-
-$query = "INSERT INTO funding(user, project_title, amount_pledged) VALUES ('$username', '$project_title', $amount_pledged);";
+$query = "SELECT * FROM projects where title = '$project_title';";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
-$query = "UPDATE projects SET remaining_amount= (remaining_amount - $amount_pledged) WHERE title = '$project_title';";
+$result = pg_fetch_all($result);
+
+$amt = $result[0]["remaining_amount"];
+
+$amt = $amt - $amount_pledged;
+
+
+$query = "UPDATE projects SET remaining_amount= '$amt' WHERE title = '$project_title';";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
-
+$query = "INSERT INTO funding(username, project_title, amount_pledged) VALUES ('$username', '$project_title', '$amount_pledged');";
+$result = pg_query($query) or die("Query failed: " . pg_last_error());
 
 ?>
