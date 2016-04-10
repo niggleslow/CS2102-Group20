@@ -46,6 +46,8 @@ FROM projects p
 WHERE $statement";
 $result = pg_query($query) or die("Query failed: " . pg_last_error());
 
+$result = pg_fetch_all($result);
+
 
 $answer = json_encode($result);
 
